@@ -2,7 +2,7 @@
 #include<stdlib.h>
 WINDOW *gamewin;
 void deadflappy(int c, int r);
-void drawflappy(int *r, int *c, int *rowbd1, int *rowbd, int *rowb, int *rowb1) {
+void drawflappy(int *r, int *c, int *rowbd1, int *rowbd, int *rowb, int *rowb1, int *rowb2, int *rowbd2, int *tmp, int *tmp1, int *tmp2) {
 	int flag = 0;
 	if(mvinch(0 + *c, 15 + *r) == '|' || mvinch(0 + *c, 15 + *r) == '-' || mvinch(0 + *c, 15 + *r) == '_') 
 		flag = 1;
@@ -125,7 +125,7 @@ void drawflappy(int *r, int *c, int *rowbd1, int *rowbd, int *rowb, int *rowb1) 
 		getmaxyx(stdscr, y, x);
 		while(*c + 9 < y) {
 			clear();
-			mvprintw(1, 50, "GAME OVER :/");
+			mvprintw(1, 47, "GAME OVER :(");
 			deadflappy(*c, *r);
 			(*c)++;
 			refresh();
@@ -177,8 +177,13 @@ void drawflappy(int *r, int *c, int *rowbd1, int *rowbd, int *rowb, int *rowb1) 
 			}
 		}
 		if(flag == 1 || flag == 0) {
-			*r = *c = *rowb = *rowb1 = *rowbd = *rowbd1 = 0;
+			*r = *c = *rowb = *rowb1 = *rowbd = *rowbd1 = *rowb2 = *rowbd2 = 0;
 			attroff(COLOR_PAIR(1));
+			int max = 24;
+			int min = 1;
+			*tmp = rand() % (max - min) + min;	
+			*tmp1 = rand() % (max - min) + min;	
+			*tmp2 = rand() % (max - min) + min;	
 			clear();
 			refresh();
 		}
@@ -207,16 +212,32 @@ void drawupblock(int x, int height) {
 void drawupblock1(int x, int height) {
 	int i = 0;
 	while(i != height) {
-		mvprintw(i, 130 + x, "|");
+		mvprintw(i, 100 + x, "|");
 		i++;
 	}
 	int j = 1;
 	while(j != 10) {
-		mvprintw(i - 1, 130 + x + j, "_");
+		mvprintw(i - 1, 100 + x + j, "_");
 		j++;
 	}
 	while(i) {
-		mvprintw(i - 1, 130 + x + j - 1, "|");
+		mvprintw(i - 1, 100 + x + j - 1, "|");
+		i--;
+	}
+}
+void drawupblock2(int x, int height) {
+	int i = 0;
+	while(i != height) {
+		mvprintw(i, 150 + x, "|");
+		i++;
+	}
+	int j = 1;
+	while(j != 10) {
+		mvprintw(i - 1, 150 + x + j, "_");
+		j++;
+	}
+	while(i) {
+		mvprintw(i - 1, 150 + x + j - 1, "|");
 		i--;
 	}
 }
@@ -242,80 +263,98 @@ void drawdownblock1(int x,int height) {
 	int x1, y1, i = 1;
 	getmaxyx(stdscr, x1, y1);
 	while(i <= height) {
-		mvprintw(x1 - i, 130 + x, "|");
+		mvprintw(x1 - i, 100 + x, "|");
 		i++;
 	}
 	i--;
 	int j = 0;
 	while(j != 10) {
-		mvprintw(x1 - i - 1, 130 + x + j, "-");
+		mvprintw(x1 - i - 1, 100 + x + j, "-");
 		j++;
 	}
 	while(i) {
-		mvprintw(x1 - i, 130 + x + j - 1, "|");
+		mvprintw(x1 - i, 100 + x + j - 1, "|");
+		i--;
+	}
+}
+void drawdownblock2(int x,int height) {
+	int x1, y1, i = 1;
+	getmaxyx(stdscr, x1, y1);
+	while(i <= height) {
+		mvprintw(x1 - i, 150 + x, "|");
+		i++;
+	}
+	i--;
+	int j = 0;
+	while(j != 10) {
+		mvprintw(x1 - i - 1, 150 + x + j, "-");
+		j++;
+	}
+	while(i) {
+		mvprintw(x1 - i, 150 + x + j - 1, "|");
 		i--;
 	}
 }
 void deadflappy(int c, int r) {
-	mvprintw(0 + c, 35 + r, "_");
-	mvprintw(0 + c, 36 + r, "_");
-	mvprintw(0 + c, 37 + r, "_");
-	mvprintw(0 + c, 38 + r, "_");
-	mvprintw(0 + c, 39 + r, "_");
-	mvprintw(0 + c, 40 + r, "_");	//20 = 40
-	mvprintw(1 + c, 33 + r, "|");
-	mvprintw(1 + c, 34 + r, "|");
-	mvprintw(1 + c, 40 + r, "-");
-	mvprintw(1 + c, 41 + r, "-");
-	mvprintw(1 + c, 42 + r, "-");
-	mvprintw(1 + c, 43 + r, "-");
-	mvprintw(1 + c, 44 + r, "-");
-	mvprintw(2 + c, 31 + r, "|");
-	mvprintw(2 + c, 38 + r, "|");
-	mvprintw(2 + c, 41 + r, "*");
-	mvprintw(2 + c, 43 + r, "*");
-	mvprintw(2 + c, 45 + r, "|");
-	mvprintw(3 + c, 30 + r, "|");
-	mvprintw(3 + c, 35 + r, "|");
-	mvprintw(3 + c, 40 + r, "-");
-	mvprintw(3 + c, 41 + r, "-");
-	mvprintw(3 + c, 42 + r, "-");
-	mvprintw(3 + c, 43 + r, "-");
-	mvprintw(3 + c, 44 + r, "-");
-	mvprintw(3 + c, 45 + r, "-");
-	mvprintw(3 + c, 46 + r, "_");
-	mvprintw(4 + c, 29 + r, "|");
-	mvprintw(4 + c, 36 + r, "|");
-	mvprintw(4 + c, 42 + r, "|");
-	mvprintw(4 + c, 46 + r, "_");
-	mvprintw(4 + c, 47 + r, "\\");
-	mvprintw(5 + c, 30 + r, "|");
-	mvprintw(5 + c, 31 + r, "_");
-	mvprintw(5 + c, 32 + r, "_");
-	mvprintw(5 + c, 33 + r, "_");
-	mvprintw(5 + c, 34 + r, "|");
-	mvprintw(5 + c, 41 + r, "|");
-	mvprintw(5 + c, 46 + r, "_");
-	mvprintw(5 + c, 47 + r, "/");
-	mvprintw(6 + c, 32 + r, "|");
-	mvprintw(6 + c, 33 + r, "_");
-	mvprintw(6 + c, 34 + r, "_");
-	mvprintw(6 + c, 42 + r, "_");
-	mvprintw(6 + c, 43 + r, "_");
-	mvprintw(6 + c, 44 + r, "|");
-	mvprintw(6 + c, 45 + r, "|");
-	mvprintw(7 + c, 35 + r, "-");
-	mvprintw(7 + c, 36 + r, "-");
-	mvprintw(7 + c, 37 + r, "-");
-	mvprintw(7 + c, 38 + r, "-");
-	mvprintw(7 + c, 39 + r, "-");
-	mvprintw(7 + c, 40 + r, "-");
-	mvprintw(7 + c, 41 + r, "-");
+	mvprintw(0 + c, 55 + r, "_");
+	mvprintw(0 + c, 56 + r, "_");
+	mvprintw(0 + c, 57 + r, "_");
+	mvprintw(0 + c, 58 + r, "_");
+	mvprintw(0 + c, 59 + r, "_");
+	mvprintw(0 + c, 60 + r, "_");	//40 = 60
+	mvprintw(1 + c, 53 + r, "|");
+	mvprintw(1 + c, 54 + r, "|");
+	mvprintw(1 + c, 60 + r, "-");
+	mvprintw(1 + c, 61 + r, "-");
+	mvprintw(1 + c, 62 + r, "-");
+	mvprintw(1 + c, 63 + r, "-");
+	mvprintw(1 + c, 64 + r, "-");
+	mvprintw(2 + c, 51 + r, "|");
+	mvprintw(2 + c, 58 + r, "|");
+	mvprintw(2 + c, 61 + r, "*");
+	mvprintw(2 + c, 63 + r, "*");
+	mvprintw(2 + c, 65 + r, "|");
+	mvprintw(3 + c, 50 + r, "|");
+	mvprintw(3 + c, 55 + r, "|");
+	mvprintw(3 + c, 60 + r, "-");
+	mvprintw(3 + c, 61 + r, "-");
+	mvprintw(3 + c, 62 + r, "-");
+	mvprintw(3 + c, 63 + r, "-");
+	mvprintw(3 + c, 64 + r, "-");
+	mvprintw(3 + c, 65 + r, "-");
+	mvprintw(3 + c, 66 + r, "_");
+	mvprintw(4 + c, 49 + r, "|");
+	mvprintw(4 + c, 56 + r, "|");
+	mvprintw(4 + c, 62 + r, "|");
+	mvprintw(4 + c, 66 + r, "_");
+	mvprintw(4 + c, 67 + r, "\\");
+	mvprintw(5 + c, 50 + r, "|");
+	mvprintw(5 + c, 51 + r, "_");
+	mvprintw(5 + c, 52 + r, "_");
+	mvprintw(5 + c, 53 + r, "_");
+	mvprintw(5 + c, 54 + r, "|");
+	mvprintw(5 + c, 61 + r, "|");
+	mvprintw(5 + c, 66 + r, "_");
+	mvprintw(5 + c, 67 + r, "/");
+	mvprintw(6 + c, 52 + r, "|");
+	mvprintw(6 + c, 53 + r, "_");
+	mvprintw(6 + c, 54 + r, "_");
+	mvprintw(6 + c, 62 + r, "_");
+	mvprintw(6 + c, 63 + r, "_");
+	mvprintw(6 + c, 64 + r, "|");
+	mvprintw(6 + c, 65 + r, "|");
+	mvprintw(7 + c, 55 + r, "-");
+	mvprintw(7 + c, 56 + r, "-");
+	mvprintw(7 + c, 57 + r, "-");
+	mvprintw(7 + c, 58 + r, "-");
+	mvprintw(7 + c, 59 + r, "-");
+	mvprintw(7 + c, 60 + r, "-");
+	mvprintw(7 + c, 61 + r, "-");
 
 }
-#define DELAY 70000
+#define DELAY 60000
 int main() {
-	int row = 0, column = 0, x, y, rowb = 0, rowbd = 0, rowb1 = 0, rowbd1 = 0;
+	int row = 0, column = 0, x, y, rowb = 0, rowbd = 0, rowb1 = 0, rowbd1 = 0, rowb2 = 0, rowbd2 = 0;
 	initscr();
 	noecho();
 	start_color();
@@ -333,14 +372,16 @@ int main() {
 	wrefresh(startwin);
 	wgetch(startwin);
 	gamewin = newwin(y, x, 0, 0);
-	drawflappy(&row, &column, &rowbd, &rowbd1, &rowb, &rowb1);
-	refresh();
 	int max = 24;
 	int min = 1;
-	int flag = 0;
-	int flag1 = 0; 
 	int tmp = rand() % (max - min) + min;	
 	int tmp1 = rand() % (max - min) + min;	
+	int tmp2 = rand() % (max - min) + min;
+	drawflappy(&row, &column, &rowbd, &rowbd1, &rowb, &rowb1, &rowbd2, &rowb2, &tmp, &tmp1, &tmp2);
+	refresh();
+	int flag = 0;
+	int flag1 = 0; 
+	int flag2 = 0;
 	while(1) {
 		nodelay(stdscr, TRUE);	
 		usleep(DELAY);	
@@ -354,28 +395,38 @@ int main() {
 				rowb1--;
 				rowb--;
 				rowbd--;
+				rowb2--;
+				rowbd2--;
 				drawdownblock(rowbd, 22 - tmp);		// upper height is 20 lower is 5 so the remaining is 12 and that is just okay
 				drawupblock(rowb, tmp);
 				drawupblock1(rowb1, tmp1);
 				drawdownblock1(rowbd1, 22 - tmp1);
-				drawflappy(&row, &column, &rowb, &rowb1, &rowbd1, &rowbd);
+				drawupblock2(rowb2, tmp2);
+				drawdownblock2(rowbd2, 22 - tmp2);
+				drawflappy(&row, &column, &rowb, &rowb1, &rowbd1, &rowbd, &rowbd2, &rowb2, &tmp, &tmp1, &tmp2);
 				if(rowb < -59) {
 					flag = 1; 
 					rowb = x - 50;
 				}
 				if(rowbd < -59) 
 					rowbd = x - 50;
-				if(rowb1 < -139) {
+				if(rowb1 < -109) {
 					flag1 = 1;
-					rowb1 = x - 130;
+					rowb1 = x - 100;
 				}
-				if(rowbd1 < -139)
-					rowbd1 = x - 130;
+				if(rowbd1 < -109)
+					rowbd1 = x - 100;
+				if(rowb2 < -159) {
+					flag2 = 1;
+					rowb2 = x - 150;
+				}
+				if(rowbd2 < -159)
+					rowbd2 = x - 150;
 				clear();
 				row = 0;
 				while(row + 9 < y) {
 					clear();
-					mvprintw(1, 50, "GAME OVER :/");
+					mvprintw(1, 47, "GAME OVER :/");
 					deadflappy(row, column);
 					row++;
 					refresh();
@@ -426,8 +477,11 @@ int main() {
 					}
 				}
 				if(flag == 1 || flag == 0) {
-					row = column = rowb = rowb1 = rowbd = rowbd1 = 0;
+					row = column = rowb = rowb1 = rowbd = rowbd1 = rowb2 = rowbd2 = 0;
 					attroff(COLOR_PAIR(1));
+					tmp = rand() % (max - min) + min;	
+					tmp1 = rand() % (max - min) + min;	
+					tmp2 = rand() % (max - min) + min;	
 					clear();
 					refresh();
 				}
@@ -442,24 +496,34 @@ int main() {
 				rowb--;
 				rowbd--;
 				rowb1--;
+				rowb2--;
+				rowbd2--;
 				drawdownblock(rowbd, 22 - tmp);
 				drawupblock(rowb, tmp);
 				drawupblock1(rowb1, tmp1);
 				drawdownblock1(rowbd1, 22 - tmp1);
+				drawupblock2(rowb2, tmp2);
+				drawdownblock2(rowbd2, 22 - tmp2);
 				column++;
-				drawflappy(&row, &column, &rowb, &rowbd, &rowbd1, &rowb1);
+				drawflappy(&row, &column, &rowb, &rowbd, &rowbd1, &rowb1, &rowb2, &rowbd2, &tmp, &tmp1, &tmp2);
 				if(rowb < -59) {
 					flag = 1;
 					rowb = x - 50;
 				}
 				if(rowbd < -59)
 					rowbd = x - 50;
-				if(rowb1 < -139) {
+				if(rowb1 < -109) {
 					flag1 = 1;
-					rowb1 = x - 130;
+					rowb1 = x - 100;
 				}
-				if(rowbd1 < -139)
-					rowbd1 = x - 130;
+				if(rowbd1 < -109)
+					rowbd1 = x - 100;
+				if(rowb2 < -159) {
+					flag2 = 1;
+					rowb2 = x - 150;
+				}
+				if(rowbd2 < -159)
+					rowbd2 = x - 150;
 			}
 		}	
 		else if(c == 32) {
@@ -468,25 +532,35 @@ int main() {
 			rowb1--;
 			rowb--;
 			rowbd--;
+			rowb2--;
+			rowbd2--;
 			drawdownblock(rowbd, 22 - tmp);
 			drawupblock(rowb, tmp);
 			drawupblock1(rowb1, tmp1);
 			drawdownblock1(rowbd1, 22 - tmp1);
+			drawupblock2(rowb2, tmp2);
+			drawdownblock2(rowbd2, 22 - tmp2);
 			column--;
-			drawflappy(&row, &column, &rowb, &rowbd, &rowbd1, &rowb1);
+			drawflappy(&row, &column, &rowb, &rowbd, &rowbd1, &rowb1, &rowb2, &rowbd2, &tmp, &tmp1, &tmp2);
 			column -= 3;
-			if(rowb1 < -139) {
+			if(rowb1 < -109) {
 				flag1 = 1;
-				rowb1 = x - 130;			
+				rowb1 = x - 100;			
 			}
-			if(rowbd1 < -139)
-				rowbd1 = x - 130;
+			if(rowbd1 < -109)
+				rowbd1 = x - 100;
 			if(rowb < -57) {
 				flag = 1;
 				rowb = x - 50;
 			}
 			if(rowbd < -57)
 				rowbd = x - 50;		
+			if(rowb2 < -159) {
+				flag2 = 1;
+				rowb2 = x - 150;
+			}
+			if(rowbd2 < -159)
+				rowbd2 = x - 150;
 		}
 		else if(c == 'q') 
 			break;
@@ -497,6 +571,10 @@ int main() {
 		if(flag1) {
 			flag1 = 0;
 			tmp1 = rand() % (max - min) + min;	
+		}
+		if(flag2) {	
+			flag2 = 0;
+			tmp2 = rand() % (max - min) + min;
 		}
 		refresh();
 	}
